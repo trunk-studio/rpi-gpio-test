@@ -15,17 +15,18 @@ GPIO.setup(18, GPIO.IN)
 def pressed(pin):
     i = GPIO.input(18)
     print "pressed"
-    call(["./hme-led", "led1", "on"])
+    f = open('/var/run/hme/led/led1', 'w+')
+    f.write('on')
+    f.close()
 
-GPIO.add_event_detect(18, GPIO.RISING, callback=pressed, bouncetime=200)
 
 pid = os.fork()
 
-while True:
-    time.sleep(1)
+if pid is not 0:
+    print "Run hme-reset as daemon."
+    sys.exit(0)
+else:
+    GPIO.add_event_detect(18, GPIO.RISING, callback=pressed, bouncetime=200)
 
-# if pid is not 0:
-#    sys.exit(0)
-# else:
-#     while True:
-#        time.sleep(1)
+    while True:
+       time.sleep(1)
