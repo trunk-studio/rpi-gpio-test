@@ -1,6 +1,6 @@
 {
-  "name": "gpio-test",
-  "version": "0.0.0",
+  "name": "rpi-gpio-test",
+  "version": "0.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -9,7 +9,6 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "pi-gpio": "0.0.8",
     "rpi-gpio": "^0.7.0"
   }
 }

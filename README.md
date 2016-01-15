@@ -14,3 +14,8 @@ make
 sudo make install
 sudo adduser pi gpio
 ```
+
+before `make` do this patch first
+
+https://github.com/rexington/quick2wire-gpio-admin/commit/e1974dd197573a0a846a9fbe35d9f3ff1cbb3884
+
