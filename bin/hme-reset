@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-###################################
-# HME LED DAEMON FOR RASPBERRY PI #
-###################################
+#####################################
+# HME RESET DAEMON FOR RASPBERRY PI #
+#####################################
 import sys, os, time
 import RPi.GPIO as GPIO
 from subprocess import call
