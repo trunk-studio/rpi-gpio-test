@@ -15,8 +15,9 @@ __PIDFILE__ = __LED_DIR__ + '/pid'
 if not os.path.isdir(__LED_DIR__):
     os.makedirs(__LED_DIR__)
 
-__LED1_PIN__ = 23
-__LED2_PIN__ = 24
+__LED1_PIN__ = 7
+__LED2_PIN__ = 8
+__LED3_PIN__ = 25
 
 def init():
     GPIO.setwarnings(False) 
