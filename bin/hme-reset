@@ -7,18 +7,50 @@ import sys, os, time
 import RPi.GPIO as GPIO
 from subprocess import call
 
-GPIO.setwarnings(False) 
-GPIO.setmode(GPIO.BCM)
+__RESET_DIR__ = '/var/run/hme/reset'
+__PIDFILE__ = __RESET_DIR__ + '/pid'
 
-GPIO.setup(18, GPIO.IN)
+__RESET_PIN__ = 20
+
+if not os.path.isdir(__RESET_DIR__):
+    os.makedirs(__RESET_DIR__)
+
+def lastpid(pid = None):
+    if pid == None:
+        if not os.path.isfile(__PIDFILE__):
+            return None
+        f = open(__PIDFILE__, 'r')
+        p = f.read().strip()
+        f.close()
+        if p:
+            return int(p)
+        else:
+            return None
+    else:
+        f = open(__PIDFILE__, 'w+')
+        f.write(str(pid))
+        f.close()
+
+def pid_exists(pid):
+    if not pid:
+        return False
+    else: 
+        return os.path.exists('/proc/' + str(pid))
+
+def init():
+    GPIO.setwarnings(False) 
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(__RESET_PIN__, GPIO.IN)
 
 def pressed(pin):
-    i = GPIO.input(18)
+    i = GPIO.input(__RESET_PIN__)
     print "pressed"
     f = open('/var/run/hme/led/led1', 'w+')
     f.write('on')
     f.close()
 
+def cleanup():
+    GPIO.cleanup()
 
 pid = os.fork()
 
@@ -26,7 +58,27 @@ if pid is not 0:
     print "Run hme-reset as daemon."
     sys.exit(0)
 else:
-    GPIO.add_event_detect(18, GPIO.RISING, callback=pressed, bouncetime=200)
+    GPIO.add_event_detect(__RESET_PIN__, GPIO.RISING, callback=pressed, bouncetime=200)
 
     while True:
        time.sleep(1)
+
+if __name__ == '__main__':
+
+    pid = lastpid()
+
+    if pid_exists(pid):
+        
+        sys.exit(0)
+
+    try: 
+        pid = os.fork()
+        if pid > 0:
+            # in parent
+            sys.exit(0)
+        else:
+            lastpid(os.getpid())
+
+            init()
+
+ 
